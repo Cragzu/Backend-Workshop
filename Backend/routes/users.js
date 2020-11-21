@@ -156,6 +156,20 @@ router.put("/:id", (req, res) => {
 // TODO #12 Fill in the missing pieces of code in order to complete the following Route. (Optional)
 // Note: Create another route that updates an existing user in the database using  POST REQUEST.
 
+router.route("/update/:id").post((req, res) => {
+    User.findById(req.params.id)
+        .then((user) => {
+            user.username = req.body.username; // sets new user variables to equal the new data
+            user.age = req.body.age;
+
+            user
+                .save() // save it
+                .then(() => res.json("User updated!"))
+                .catch((err) => res.status(400).json("Error: " + err));
+        })
+        .catch((err) => res.status(400).json("Error: " + err));
+});
+
 
 //For all these router files, need to export router
 module.exports = router;
