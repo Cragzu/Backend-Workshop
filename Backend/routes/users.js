@@ -64,8 +64,8 @@ router.get("/all", (req, res) => {
 router.get("/:id", (req, res) => {
   //endpoint for accessing single user by id in database
   User.findById(req.params.id) // find it by id
-    .then((user) => /*Add missing code here*/)
-    .catch((err) => /*Add missing code here*/);
+    .then((user) => res.send(user))
+    .catch((err) => res.status(400).json("Error: " + err));
  });
  
 
@@ -90,13 +90,12 @@ router.post("/add", (req, res) => {
   const username = req.body.username; //we assign the username to variable, and create new instance of username
   const age = req.body.age || 0;
   const newUser = new User({
-    /**
-     * add missing code here
-     */
+    username: username,
+      age: age
   });
   newUser
     .save() // save the new user to the database
-    .then(() => res.json("User added!")) // return prompt that user is added; else return error message
+    .then(() => res.json(`User ${newUser.username} added!`)) // return prompt that user is added; else return error message
     .catch((err) => res.status(400).json("Error: " + err));
  });
  
@@ -112,10 +111,10 @@ router.post("/add", (req, res) => {
 // TODO #10 Fill in the missing pieces of code in order to complete the following Route.
 // Note: The function User.findByIdAndDelete(req.params.id) finds a specific id from the MongoDB database.
 
-router./*adding missing code here*/("/:id", (req, res) => {
-  User./*add missing code here*/(req.params.id)
-    .then(() => /*adding missing code here*/)
-    .catch((err) => /*adding missing code here*/);
+router.delete("/:id", (req, res) => {
+  User.findByIdAndDelete(req.params.id)
+    .then(() => res.json(`User deleted! ID: ${req.params.id}`))
+    .catch((err) => res.status(400).json("Error: " + err));
  });
  
 /**
@@ -132,14 +131,15 @@ router./*adding missing code here*/("/:id", (req, res) => {
 // TODO #11 Fill in the missing pieces of code in order to complete the following Route.
 // Note: The function User.findByIdAndUpdate(req.params.id) finds a specific id from the MongoDB database and updates it
 
-router./*adding missing code here*/("/:id", (req, res) => {
-  const body = /*adding missing code here*/;
+router.put("/:id", (req, res) => {
+  const body = req.body;
   const user = {
-    /*adding missing code here*/
+      username: body.username,
+      age: body.age
   };
- 
- 
-  User./*adding missing code here*/(req.params.id, user, { new: true })
+
+
+  User.findByIdAndUpdate(req.params.id, user, { new: true })
     .then((updatedUser) => res.json(updatedUser))
     .catch((err) => res.status(400).json("Error: " + err));
  });
